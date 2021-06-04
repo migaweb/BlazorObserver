@@ -1,0 +1,34 @@
+﻿@page "/counter"
+@inject BlazorObserver.Stores.CounterStore.CounterStore CounterStore
+@implements IDisposable
+
+<h1>Counter</h1>
+
+<p>Current count: @CounterStore.GetState().Count</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code { 
+
+  protected override void OnInitialized()
+  {
+      base.OnInitialized();
+
+      CounterStore.AddStateChangeListeners(StateListener);
+  }
+
+  private void StateListener()
+  {
+      StateHasChanged();
+  }
+
+  private void IncrementCount()
+  {
+      CounterStore.IncrementCount();
+  }
+
+  public void Dispose()
+  {
+      CounterStore.RemoveStateChangeListeners(StateListener);
+    }
+}
